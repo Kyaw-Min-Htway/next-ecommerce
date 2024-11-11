@@ -5,7 +5,7 @@ import DOMPurify from "isomorphic-dompurify";
 
 const PRODUCT_PER_PAGE = 20;
 
-const ProductList = async ({ categoryId, limit }: { categoryId: string; limit?: number }) => {
+const ProductList = async ({ categoryId, limit }: { categoryId?: string | null;  limit?: number }) => {
   if (!categoryId) {
     console.error("categoryId is missing or invalid");
     return <div>Error: categoryId is required.</div>;
