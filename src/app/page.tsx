@@ -1,48 +1,66 @@
-// 'use client'
+// "use client";
 
-import Slider from "@/components/Slider";
-import ProductList from "@/components/ProductList";
 import CategoryList from "@/components/CategoryList";
-import { useEffect, useState } from "react";
-import { Suspense } from "react";
+import ProductList from "@/components/ProductList";
+import Slider from "@/components/Slider";
+import { WixClientContext } from "@/context/wixContext";
+import { useWixClient } from "@/hooks/useWixClient";
 import { wixClientServer } from "@/lib/wixClientServer";
+import { Suspense, useContext, useEffect } from "react";
 
-const HomePage = () => {
-  const [products, setProducts] = useState(null);
+const HomePage = async () => {
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const wixClient = await wixClientServer();
-        const res = await wixClient.products.queryProducts().find();
-        setProducts(res);
-        console.log(res);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
+  // TEST (FETCHING ON THE CLIENT COMPONENT)
 
-    fetchProducts();
-  }, []);
+  // const wixClient = useWixClient()
+
+  // useEffect(() => {
+  //   const getProducts = async () => {
+  //     const res = await wixClient.products.queryProducts().find();
+
+  //     console.log(res)
+  //   };
+
+  //   getProducts();
+  // }, [wixClient]);
+  
+
+  // TEST (FETCHING ON THE SERVER COMPONENT)
+
+  // const wixClient = await wixClientServer();
+
+  // const res = await wixClient.products.queryProducts().find();
+
+  // console.log(res);
 
   return (
     <div className="">
       <Slider />
       <div className="mt-24 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
         <h1 className="text-2xl">Featured Products</h1>
-        <Suspense fallback={"loading"}>
-          <ProductList categoryId={process.env.FEATURED_PRODUCTS_CATEGORY_ID!} limit={4} />
+        <Suspense>
+          <ProductList
+            categoryId={process.env.FEATURED_PRODUCTS_FEATURED_CATEGORY_ID!}
+            limit={4}
+          />
         </Suspense>
       </div>
       <div className="mt-24">
-        <h1 className="text-2xl px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 mb-12">Categories</h1>  
-        <Suspense fallback={"loading"}>
+        <h1 className="text-2xl px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 mb-12">
+          Categories
+        </h1>
+        <Suspense>
           <CategoryList />
         </Suspense>
       </div>
       <div className="mt-24 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
         <h1 className="text-2xl">New Products</h1>
-        {/* Render ProductList or a component for new products here */}
+        <Suspense>
+          <ProductList
+            categoryId={process.env.FEATURED_PRODUCTS_NEW_CATEGORY_ID!}
+            limit={4}
+          />
+        </Suspense>
       </div>
     </div>
   );
